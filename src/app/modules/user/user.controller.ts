@@ -12,8 +12,15 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created successfully!',
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      message: 'User not created',
+      error: {
+        code: 400,
+        description: 'User not created!',
+      },
+    });
   }
 };
 
