@@ -7,9 +7,9 @@ const fullNameSchema = new Schema<TFullName>({
 });
 
 const addressSchema = new Schema<TAddress>({
-  street: { type: String, required: [true, 'First name is required'] },
-  city: { type: String, required: [true, 'First name is required'] },
-  country: { type: String, required: [true, 'First name is required'] },
+  street: { type: String, required: [true, 'Street name is required'] },
+  city: { type: String, required: [true, 'City name is required'] },
+  country: { type: String, required: [true, 'Country name is required'] },
 });
 
 const userNameSchema = new Schema<TUser>({
