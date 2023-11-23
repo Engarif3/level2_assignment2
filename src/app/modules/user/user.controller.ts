@@ -4,7 +4,7 @@ import { UserServices } from './user.service';
 // create user
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
     const result = await UserServices.createUserIntoDB(userData);
 
     res.status(200).json({
@@ -18,7 +18,7 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User not created',
       error: {
         code: 400,
-        description: 'User not created!',
+        description: 'User may already exist',
       },
     });
   }
@@ -67,8 +67,57 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// update user
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const updatedUserData = req.body;
+
+    const result = await UserServices.updateUserInDB(userId, updatedUserData);
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
+// delete user
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    await UserServices.deleteUserFromDB(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
+  deleteUser,
 };
