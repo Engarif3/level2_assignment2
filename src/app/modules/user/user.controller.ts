@@ -1,25 +1,27 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
+import userValidationSchema from './user.validation';
 
 // create user
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    const result = await UserServices.createUserIntoDB(userData);
+    // creating a schema validation using zod
+    const zodParseData = userValidationSchema.parse(userData);
+
+    const result = await UserServices.createUserIntoDB(zodParseData);
 
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
       data: result,
     });
-  } catch (error) {
-    res.status(200).json({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
       success: false,
-      message: 'User not created',
-      error: {
-        code: 400,
-        description: 'User may already exist',
-      },
+      message: err.message || 'something went wrong',
+      error: err,
     });
   }
 };
