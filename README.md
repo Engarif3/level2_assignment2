@@ -24,7 +24,7 @@ Create a '.env' file in the root directory and add the following:
 
 # Scripts
 
-- npm run lint: Check for linting issues.
+- npm run lint [comment]: <> (Check for linting issues.)
 - npm run lint:fix: Fix linting issues.
 - npm run prettier: Format code using Prettier.
 - npm run prettier:fix: Automatically fix code formatting issues.
