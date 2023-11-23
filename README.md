@@ -1,6 +1,4 @@
-# First Project
-
-This project is a sample application built with Express, Mongoose, and Zod.
+## This project is a sample application built with Express, Mongoose, and Zod.
 
 ## Prerequisites
 
