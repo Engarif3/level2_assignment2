@@ -17,10 +17,10 @@ Create a '.env' file in the root directory and add the following:
 
 # Example .env file
 
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/first-project
+- PORT=5000
+- MONGODB_URI=mongodb://localhost:27017/first-project
 
-\*\* Adjust the values according to your preferences.
+* Adjust the values according to your preferences.
 
 # Scripts
 
