@@ -44,12 +44,13 @@ const updateUserInDB = async (id: number, updatedUserData: TUser) => {
 
 // delete a user query
 
-const deleteUserFromDB = async (id: string) => {
-  const result = await UserModel.findOneAndDelete({ userId: id });
-  if (!result) {
-    throw new Error('User not found');
+const deleteUserFromDB = async (id: number) => {
+  if (await UserModel.isUserExists(id)) {
+    const result = await UserModel.findOneAndDelete({ userId: id });
+    return result;
+  } else {
+    throw new Error('User does not exist');
   }
-  return result;
 };
 
 export const UserServices = {
