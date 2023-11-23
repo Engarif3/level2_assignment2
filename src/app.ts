@@ -9,9 +9,7 @@ app.use(cors());
 app.use('/api/users', UserRoutes);
 
 app.get('/', (req: Request, res: Response) => {
-  const a = 10;
-
-  res.send(a);
+  res.send('<h2>Welcome to level-2 assignment-2</h2>');
 });
 
 export default app;
