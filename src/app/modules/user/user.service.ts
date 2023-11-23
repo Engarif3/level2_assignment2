@@ -1,19 +1,19 @@
 import { UserModel } from './user.model';
 import { TUser } from './user.interface';
 
-//create user
+//create a user query
 const createUserIntoDB = async (user: TUser) => {
   const result = await UserModel.create(user);
   return result;
 };
 
-// get all users
+// get all users query
 const getAllUsersFromDB = async () => {
   const result = await UserModel.find();
   return result;
 };
 
-// get single user
+// get single user query
 const getSingleUserFromDB = async (id: string) => {
   const result = await UserModel.findOne({ userId: id });
   if (!result) {
@@ -22,7 +22,7 @@ const getSingleUserFromDB = async (id: string) => {
   return result;
 };
 
-// update user
+// update user query
 const updateUserInDB = async (id: string, updatedUserData: TUser) => {
   const result = await UserModel.findOneAndUpdate(
     { userId: id },
@@ -37,7 +37,7 @@ const updateUserInDB = async (id: string, updatedUserData: TUser) => {
   return result;
 };
 
-// delete user
+// delete a user query
 
 const deleteUserFromDB = async (id: string) => {
   const result = await UserModel.findOneAndDelete({ userId: id });
