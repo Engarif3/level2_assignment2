@@ -1,4 +1,4 @@
-## A sample application built with TypeScript, Express, Mongoose, and Zod.
+## An application built with TypeScript, Express, Mongoose, and Zod.
 
 ## Prerequisites
 
