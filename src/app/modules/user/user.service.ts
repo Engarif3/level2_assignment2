@@ -2,8 +2,13 @@ import { UserModel } from './user.model';
 import { TUser } from './user.interface';
 
 //create a user query
-const createUserIntoDB = async (user: TUser) => {
-  const result = await UserModel.create(user);
+const createUserIntoDB = async (userData: TUser) => {
+  //static method
+  if (await UserModel.isUserExists(userData.userId)) {
+    throw new Error('User alrday exists');
+  }
+  const result = await UserModel.create(userData);
+
   return result;
 };
 
@@ -14,27 +19,27 @@ const getAllUsersFromDB = async () => {
 };
 
 // get single user query
-const getSingleUserFromDB = async (id: string) => {
-  const result = await UserModel.findOne({ userId: id });
-  if (!result) {
-    throw new Error('User not found');
+const getSingleUserFromDB = async (id: number) => {
+  if (await UserModel.isUserExists(id)) {
+    const result = await UserModel.findOne({ userId: id });
+    return result;
+  } else {
+    throw new Error('User does not exist');
   }
-  return result;
 };
 
 // update user query
-const updateUserInDB = async (id: string, updatedUserData: TUser) => {
-  const result = await UserModel.findOneAndUpdate(
-    { userId: id },
-    { $set: updatedUserData },
-    { new: true },
-  );
-
-  if (!result) {
-    throw new Error('User not found');
+const updateUserInDB = async (id: number, updatedUserData: TUser) => {
+  if (await UserModel.isUserExists(id)) {
+    const result = await UserModel.findOneAndUpdate(
+      { userId: id },
+      { $set: updatedUserData },
+      { new: true },
+    );
+    return result;
+  } else {
+    throw new Error('User does not exist');
   }
-
-  return result;
 };
 
 // delete a user query

@@ -51,23 +51,47 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await UserServices.getSingleUserFromDB(userId);
+    const result = await UserServices.getSingleUserFromDB(parseInt(userId));
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
       data: result,
     });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
+      message: err.message || 'something went wrong',
+      error: err,
     });
   }
 };
+
+// update user
+// const updateUser = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params;
+//     const updatedUserData = req.body;
+
+//     const result = await UserServices.updateUserInDB(
+//       parseInt(userId),
+//       updatedUserData,
+//     );
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'User updated successfully!',
+//       data: result,
+//     });
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (err: any) {
+//     res.status(404).json({
+//       success: false,
+//       message: err.message || 'something went wrong',
+//       error: err,
+//     });
+//   }
+// };
 
 // update user
 const updateUser = async (req: Request, res: Response) => {
@@ -75,21 +99,31 @@ const updateUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const updatedUserData = req.body;
 
-    const result = await UserServices.updateUserInDB(userId, updatedUserData);
+    try {
+      const zodParseData = userValidationSchema.parse(updatedUserData);
+      const result = await UserServices.updateUserInDB(
+        parseInt(userId),
+        zodParseData,
+      );
 
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully!',
-      data: result,
-    });
-  } catch (error) {
-    res.status(404).json({
+      res.status(200).json({
+        success: true,
+        message: 'User updated successfully!',
+        data: result,
+      });
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        message: 'Validation error during update',
+        error: err,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
       success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
+      message: err.message || 'something went wrong',
+      error: err,
     });
   }
 };
