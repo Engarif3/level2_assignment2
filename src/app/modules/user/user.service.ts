@@ -1,5 +1,5 @@
 import { UserModel } from './user.model';
-import { TUser } from './user.interface';
+import { TProduct, TUser } from './user.interface';
 
 //create a user query
 const createUserIntoDB = async (userData: TUser) => {
@@ -55,6 +55,28 @@ const deleteUserFromDB = async (id: number) => {
 
 // =================================================================================================
 // =================================================================================================
+
+// Add new product to orders query
+const addProductToOrdersInDB = async (userId: number, newProduct: TProduct) => {
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { userId },
+    {
+      $push: {
+        orders: {
+          ...newProduct,
+        },
+      },
+    },
+    { new: true },
+  );
+
+  if (!updatedUser) {
+    throw new Error('User not found');
+  }
+
+  return updatedUser.orders || [];
+};
+
 // get all orders query
 
 const getAllOrdersFromDB = async (userId: number) => {
@@ -94,6 +116,7 @@ export const UserServices = {
   getSingleUserFromDB,
   updateUserInDB,
   deleteUserFromDB,
+  addProductToOrdersInDB,
   getAllOrdersFromDB,
   getTotalPriceFromDB,
 };

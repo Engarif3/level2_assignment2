@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
+import { productValidationSchema } from './user.validation';
 
 // create user
 const createUser = async (req: Request, res: Response) => {
@@ -68,32 +69,6 @@ const getSingleUser = async (req: Request, res: Response) => {
 };
 
 // update user
-// const updateUser = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-//     const updatedUserData = req.body;
-
-//     const result = await UserServices.updateUserInDB(
-//       parseInt(userId),
-//       updatedUserData,
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'User updated successfully!',
-//       data: result,
-//     });
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   } catch (err: any) {
-//     res.status(404).json({
-//       success: false,
-//       message: err.message || 'something went wrong',
-//       error: err,
-//     });
-//   }
-// };
-
-// update user
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -152,28 +127,33 @@ const deleteUser = async (req: Request, res: Response) => {
 };
 // =================================================================================================
 // =================================================================================================
-// get all orders
-// const getAllOrders = async (req: Request, res: Response) => {
-//   try {
+// add a product to orders
+const addProductToOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const newProduct = req.body;
 
-//     const { userId } = req.params;
-//     const result = await UserServices.getAllOrdersFromDB(userId);
-//     res.status(200).json({
-//       success: true,
-//       message: 'Users fetched successfully!',
-//       data: result,
-//     });
-//   } catch (error) {
-//     res.status(404).json({
-//       success: false,
-//       message: 'No user found',
-//       error: {
-//         code: 400,
-//         description: 'no user created',
-//       },
-//     });
-//   }
-// };
+    const zodParseData = productValidationSchema.parse(newProduct); // Use productValidationSchema for the product
+    const result = await UserServices.addProductToOrdersInDB(
+      parseInt(userId),
+      zodParseData,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Product added to orders successfully!',
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      error: error,
+    });
+  }
+};
+// get all orders
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -226,6 +206,7 @@ export const UserControllers = {
   getSingleUser,
   updateUser,
   deleteUser,
+  addProductToOrders,
   getAllOrders,
   getTotalPrice,
 };
