@@ -12,10 +12,15 @@ const createUser = async (req: Request, res: Response) => {
 
     const result = await UserServices.createUserIntoDB(zodParseData);
 
+    const { password, ...userWithoutPassword } = result.toObject();
+
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const unusedPassword = password;
+
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
-      data: result,
+      data: userWithoutPassword,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

@@ -14,14 +14,18 @@ const createUserIntoDB = async (userData: TUser) => {
 
 // get all users query
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
+  const result = await UserModel.find().select(
+    '-userId -password -isActive -hobbies -orders',
+  );
   return result;
 };
 
 // get single user query
 const getSingleUserFromDB = async (id: number) => {
   if (await UserModel.isUserExists(id)) {
-    const result = await UserModel.findOne({ userId: id });
+    const result = await UserModel.findOne({ userId: id }).select(
+      '-password -orders',
+    );
     return result;
   } else {
     throw new Error('User does not exist');
