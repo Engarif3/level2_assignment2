@@ -65,13 +65,24 @@ const getAllOrdersFromDB = async (userId: number) => {
   return user.orders || [];
 };
 
-//
+// calculate total price query
 const getTotalPriceFromDB = async (userId: number) => {
-  const user = await UserModel.findOne({ userId });
+  const user = await UserModel.findOne({ userId }).select('orders');
   if (!user) {
     throw new Error('User not found');
   }
-  return user.orders || [];
+
+  const getTotalPrice =
+    user.orders?.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0,
+    ) || 0;
+
+  const totalPrice = getTotalPrice.toFixed(2);
+
+  return {
+    totalPrice,
+  };
 };
 
 // =================================================================================================
