@@ -1,5 +1,11 @@
 import { Schema, model } from 'mongoose';
-import { TAddress, TFullName, TUser, UserStaticModel } from './user.interface';
+import {
+  TAddress,
+  TFullName,
+  TProduct,
+  TUser,
+  UserStaticModel,
+} from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
@@ -12,6 +18,18 @@ const addressSchema = new Schema<TAddress>({
   street: { type: String, required: [true, 'Street name is required'] },
   city: { type: String, required: [true, 'City name is required'] },
   country: { type: String, required: [true, 'Country name is required'] },
+});
+
+const productSchema = new Schema<TProduct>({
+  productName: { type: String, required: [true, 'Product name is required'] },
+  price: {
+    type: Number,
+    required: [true, 'Price id is required'],
+  },
+  quantity: {
+    type: Number,
+    required: [true, 'Quantity is required'],
+  },
 });
 
 const userSchema = new Schema<TUser, UserStaticModel>({
@@ -47,6 +65,7 @@ const userSchema = new Schema<TUser, UserStaticModel>({
     required: [true, 'Hobby is required'],
   },
   address: addressSchema,
+  orders: { type: [productSchema], required: false },
 });
 
 // pre save middleware

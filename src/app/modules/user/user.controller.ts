@@ -150,10 +150,59 @@ const deleteUser = async (req: Request, res: Response) => {
     });
   }
 };
+// =================================================================================================
+// =================================================================================================
+// get all orders
+// const getAllOrders = async (req: Request, res: Response) => {
+//   try {
+
+//     const { userId } = req.params;
+//     const result = await UserServices.getAllOrdersFromDB(userId);
+//     res.status(200).json({
+//       success: true,
+//       message: 'Users fetched successfully!',
+//       data: result,
+//     });
+//   } catch (error) {
+//     res.status(404).json({
+//       success: false,
+//       message: 'No user found',
+//       error: {
+//         code: 400,
+//         description: 'no user created',
+//       },
+//     });
+//   }
+// };
+
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getAllOrdersFromDB(parseInt(userId));
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: { orders: result },
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: 'No orders found',
+      error: {
+        code: 404,
+        description: 'No orders found',
+      },
+    });
+  }
+};
+// =================================================================================================
+// =================================================================================================
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  getAllOrders,
 };

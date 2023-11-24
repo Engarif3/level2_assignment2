@@ -10,7 +10,11 @@ export type TAddress = {
   city: string;
   country: string;
 };
-
+export type TProduct = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
 export type TUser = {
   userId: number;
   username: string;
@@ -21,6 +25,7 @@ export type TUser = {
   isActive: boolean;
   hobbies: string[];
   address: TAddress;
+  orders?: TProduct[];
 };
 
 // for creating instance

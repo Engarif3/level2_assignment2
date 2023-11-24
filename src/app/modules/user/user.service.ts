@@ -53,10 +53,36 @@ const deleteUserFromDB = async (id: number) => {
   }
 };
 
+// =================================================================================================
+// =================================================================================================
+// get all orders query
+
+const getAllOrdersFromDB = async (userId: number) => {
+  const user = await UserModel.findOne({ userId });
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.orders || [];
+};
+
+//
+const getTotalPriceFromDB = async (userId: number) => {
+  const user = await UserModel.findOne({ userId });
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.orders || [];
+};
+
+// =================================================================================================
+// =================================================================================================
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserInDB,
   deleteUserFromDB,
+  getAllOrdersFromDB,
+  getTotalPriceFromDB,
 };
