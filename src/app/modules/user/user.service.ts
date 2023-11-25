@@ -15,7 +15,7 @@ const createUserIntoDB = async (userData: TUser) => {
 // get all users query
 const getAllUsersFromDB = async () => {
   const result = await UserModel.find().select(
-    '-userId -password -isActive -hobbies -orders',
+    '-userId -password -isActive -hobbies -orders -__v -_id',
   );
   return result;
 };
@@ -24,11 +24,11 @@ const getAllUsersFromDB = async () => {
 const getSingleUserFromDB = async (id: number) => {
   if (await UserModel.isUserExists(id)) {
     const result = await UserModel.findOne({ userId: id }).select(
-      '-password -orders',
+      '-password -orders -_id -orders -__v',
     );
     return result;
   } else {
-    throw new Error('User does not exist');
+    throw new Error('User not found');
   }
 };
 
@@ -39,7 +39,7 @@ const updateUserInDB = async (id: number, updatedUserData: TUser) => {
       { userId: id },
       { $set: updatedUserData },
       { new: true },
-    );
+    ).select('-password -orders -_id -orders -__v');
     return result;
   } else {
     throw new Error('User does not exist');
@@ -53,12 +53,9 @@ const deleteUserFromDB = async (id: number) => {
     const result = await UserModel.findOneAndDelete({ userId: id });
     return result;
   } else {
-    throw new Error('User does not exist');
+    throw new Error('User not found');
   }
 };
-
-// =================================================================================================
-// =================================================================================================
 
 // Add new product to orders query
 const addProductToOrdersInDB = async (userId: number, newProduct: TProduct) => {
@@ -80,7 +77,6 @@ const addProductToOrdersInDB = async (userId: number, newProduct: TProduct) => {
 
   return updatedUser.orders || [];
 };
-
 // get all orders query
 
 const getAllOrdersFromDB = async (userId: number) => {
@@ -104,15 +100,12 @@ const getTotalPriceFromDB = async (userId: number) => {
       0,
     ) || 0;
 
-  const totalPrice = getTotalPrice.toFixed(2);
+  const totalPrice = parseFloat(getTotalPrice.toFixed(2));
 
   return {
     totalPrice,
   };
 };
-
-// =================================================================================================
-// =================================================================================================
 
 export const UserServices = {
   createUserIntoDB,

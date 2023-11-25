@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
@@ -12,10 +14,9 @@ const createUser = async (req: Request, res: Response) => {
 
     const result = await UserServices.createUserIntoDB(zodParseData);
 
-    const { password, ...userWithoutPassword } = result.toObject();
-
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const unusedPassword = password;
+    const { password, orders, _id, ...userWithoutPassword } = result.toObject({
+      versionKey: false,
+    });
 
     res.status(200).json({
       success: true,
@@ -68,7 +69,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'something went wrong',
-      error: err,
+      error: { code: 404, description: 'User not found!' },
     });
   }
 };
@@ -94,16 +95,22 @@ const updateUser = async (req: Request, res: Response) => {
     } catch (err) {
       res.status(400).json({
         success: false,
-        message: 'Validation error during update',
-        error: err,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
       });
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: 'No user found',
+      error: {
+        code: 400,
+        description: 'no user created',
+      },
     });
   }
 };
@@ -119,10 +126,11 @@ const deleteUser = async (req: Request, res: Response) => {
       message: 'User deleted successfully!',
       data: null,
     });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     res.status(404).json({
       success: false,
-      message: 'User not found!',
+      message: error.message,
       error: {
         code: 404,
         description: 'User not found!',
@@ -138,7 +146,7 @@ const addProductToOrders = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const newProduct = req.body;
 
-    const zodParseData = productValidationSchema.parse(newProduct); // Use productValidationSchema for the product
+    const zodParseData = productValidationSchema.parse(newProduct);
     const result = await UserServices.addProductToOrdersInDB(
       parseInt(userId),
       zodParseData,
@@ -146,15 +154,18 @@ const addProductToOrders = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Product added to orders successfully!',
-      data: result,
+      message: 'Order created successfully!',
+      data: null,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message || 'Something went wrong',
-      error: error,
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
     });
   }
 };
@@ -172,10 +183,10 @@ const getAllOrders = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(404).json({
       success: false,
-      message: 'No orders found',
+      message: 'User not found',
       error: {
         code: 404,
-        description: 'No orders found',
+        description: 'User not found!',
       },
     });
   }

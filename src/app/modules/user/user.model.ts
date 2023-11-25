@@ -9,28 +9,37 @@ import {
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const fullNameSchema = new Schema<TFullName>({
-  firstName: { type: String, required: [true, 'First name is required'] },
-  lastName: { type: String, required: [true, 'Last name is required'] },
-});
-
-const addressSchema = new Schema<TAddress>({
-  street: { type: String, required: [true, 'Street name is required'] },
-  city: { type: String, required: [true, 'City name is required'] },
-  country: { type: String, required: [true, 'Country name is required'] },
-});
-
-const productSchema = new Schema<TProduct>({
-  productName: { type: String, required: [true, 'Product name is required'] },
-  price: {
-    type: Number,
-    required: [true, 'Price id is required'],
+const fullNameSchema = new Schema<TFullName>(
+  {
+    firstName: { type: String, required: [true, 'First name is required'] },
+    lastName: { type: String, required: [true, 'Last name is required'] },
   },
-  quantity: {
-    type: Number,
-    required: [true, 'Quantity is required'],
+  { _id: false },
+);
+
+const addressSchema = new Schema<TAddress>(
+  {
+    street: { type: String, required: [true, 'Street name is required'] },
+    city: { type: String, required: [true, 'City name is required'] },
+    country: { type: String, required: [true, 'Country name is required'] },
   },
-});
+  { _id: false },
+);
+
+const productSchema = new Schema<TProduct>(
+  {
+    productName: { type: String, required: [true, 'Product name is required'] },
+    price: {
+      type: Number,
+      required: [true, 'Price id is required'],
+    },
+    quantity: {
+      type: Number,
+      required: [true, 'Quantity is required'],
+    },
+  },
+  { _id: false },
+);
 
 const userSchema = new Schema<TUser, UserStaticModel>({
   userId: {
