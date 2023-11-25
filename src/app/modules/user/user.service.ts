@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UserModel } from './user.model';
 import { TProduct, TUser } from './user.interface';
 
@@ -35,9 +37,10 @@ const getSingleUserFromDB = async (id: number) => {
 // update user query
 const updateUserInDB = async (id: number, updatedUserData: TUser) => {
   if (await UserModel.isUserExists(id)) {
+    const { password, ...userDataWithoutPassword } = updatedUserData;
     const result = await UserModel.findOneAndUpdate(
       { userId: id },
-      { $set: updatedUserData },
+      { $set: userDataWithoutPassword },
       { new: true },
     ).select('-password -orders -_id -orders -__v');
     return result;

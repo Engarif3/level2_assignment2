@@ -28,7 +28,7 @@ const createUser = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'something went wrong',
-      error: err,
+      error: 'user name already exists',
     });
   }
 };
